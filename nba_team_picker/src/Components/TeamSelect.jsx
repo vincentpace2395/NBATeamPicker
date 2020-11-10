@@ -161,7 +161,9 @@ const tierOptions = [
 class TeamSelect extends React.Component {
 
     state = {
-        // buttonClicked: false,
+        selectTeamBtnDirty: false,
+        selectedEra: null,
+        selectedTier: null,
         filteredTeams: teamList,
         filteredTeamsByEra: null,
         filteredTeamsByTier: null,
@@ -169,22 +171,26 @@ class TeamSelect extends React.Component {
     };
 
     onChangeEraHandler = selectedItem => {
-        this.setState({filteredTeams: this.filterByEra(selectedItem.value)});
+        this.setState({selectedEra: selectedItem.value});
     };
 
     onChangeTierHandler = selectedItem => {
-        this.setState({filteredTeams: this.filterByTier(selectedItem.value)});
+        this.setState({selectedTier: selectedItem.value});
+    };
+
+    onClickHandler = () => {
+        this.setState({selectedTeamBtnDirty: true, filteredTeams: this.filterTeamList()}, () => {
+            this.randomizeTeam();
+        })
     };
 
     render() {
-        const {filteredTeamsByTier, filteredTeamsByEra, filteredTeams} = this.state;
-
         return (
             <div>
                 <Select className="cat-select" placeholder="Era" onChange={this.onChangeEraHandler} options={eraOptions} />
                 <Select className="cat-select" placeholder="Tier" onChange={this.onChangeTierHandler} options={tierOptions} />
 
-                <button className="Button" onClick={this.randomizeTeam}>Select team</button>
+                <button className="Button" onClick={this.onClickHandler}>Select team</button>
             </div>
         )
     }
@@ -198,12 +204,8 @@ class TeamSelect extends React.Component {
         return randomTeam.team;
     };
 
-    filterByTier = tier => {
-        return this.state.filteredTeams.filter(team => team.tier === tier);
-    };
-
-    filterByEra = era => {
-        return this.state.filteredTeams.filter(team => team.era === era);
+    filterTeamList = () => {
+        return this.state.filteredTeams.filter(team => team.tier === this.state.selectedTier).filter(_team => _team.era === this.state.selectedEra);
     };
 }
 
