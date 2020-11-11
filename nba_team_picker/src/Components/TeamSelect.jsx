@@ -162,6 +162,8 @@ class TeamSelect extends React.Component {
 
     state = {
         selectTeamBtnDirty: false,
+        selectTierDirty: false,
+        selectEraDirty: false,
         selectedEra: null,
         selectedTier: null,
         filteredTeams: teamList,
@@ -171,11 +173,17 @@ class TeamSelect extends React.Component {
     };
 
     onChangeEraHandler = selectedItem => {
-        this.setState({selectedEra: selectedItem.value});
+        if (this.state.selectTierDirty === true || this.state.selectEraDirty === true) {
+            this.setState({filteredTeams: teamList});
+        }
+        this.setState({selectedEra: selectedItem.value, selectEraDirty: true});
     };
 
     onChangeTierHandler = selectedItem => {
-        this.setState({selectedTier: selectedItem.value});
+        if (this.state.selectTierDirty === true || this.state.selectEraDirty === true) {
+            this.setState({filteredTeams: teamList});
+        }
+        this.setState({selectedTier: selectedItem.value, selectTierDirty: true});
     };
 
     onClickHandler = () => {
