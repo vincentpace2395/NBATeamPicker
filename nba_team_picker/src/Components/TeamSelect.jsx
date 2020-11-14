@@ -161,6 +161,8 @@ const tierOptions = [
 class TeamSelect extends React.Component {
 
     state = {
+        selectTierErrorMessage: "Select Tier",
+        selectEraErrorMessage: "Select Era",
         selectTeamBtnDirty: false,
         selectTierDirty: false,
         selectEraDirty: false,
@@ -193,12 +195,25 @@ class TeamSelect extends React.Component {
     };
 
     render() {
+        let tierErrorMessage, eraErrorMessage;
+        if (!this.state.selectTierDirty && this.state.selectEraDirty) {
+            tierErrorMessage = this.state.selectTierErrorMessage
+        }
+        else if (this.state.selectTierDirty && !this.state.selectEraDirty) {
+            eraErrorMessage = this.state.selectEraErrorMessage
+        }
+        else if (!this.state.selectEraDirty && !this.state.selectTierDirty) {
+            tierErrorMessage = this.state.selectTierErrorMessage;
+            eraErrorMessage = this.state.selectEraErrorMessage;
+        }
+
         return (
             <div>
                 <Select className="cat-select" placeholder="Era" onChange={this.onChangeEraHandler} options={eraOptions} />
+                <div className="error-message">{eraErrorMessage}</div>
                 <Select className="cat-select" placeholder="Tier" onChange={this.onChangeTierHandler} options={tierOptions} />
-
-                <button className="Button" onClick={this.onClickHandler}>Select team</button>
+                <div className="error-message">{tierErrorMessage}</div>
+                <button disabled={!this.state.selectEraDirty || !this.state.selectTierDirty} className="Button" onClick={this.onClickHandler}>Select team</button>
             </div>
         )
     }
